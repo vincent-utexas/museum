@@ -1,0 +1,10 @@
+:host {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    button {
+        min-width: 100%;
+        font-weight: var(--weight-bold);
+    }
+}
