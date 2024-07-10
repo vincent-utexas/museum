@@ -1,0 +1,48 @@
+:root {
+    --dark-gray: oklch(19.5% 0.003 247.96);
+    --white: oklch(100.0% 0 0);
+    --plus-jakarta-sans: "Plus Jakarta Sans", sans-serif;
+    --weight-light: 200;
+    --weight-med: 500;
+    --weight-bold: 700;
+}
+
+body {
+    font-family: var(--plus-jakarta-sans);
+    font-weight: var(--weight-med);
+
+    .font-large {
+        font-size: 2rem;
+    }
+
+    .font-small {
+        font-size: 0.8rem;
+    }
+
+    button {
+        cursor: pointer;
+        border-radius: 1rem;
+        padding: 0.5rem;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    html {
+        background-color: var(--dark-gray);
+        color: var(--white);
+
+        a:visited {
+            color: var(--white);
+        }
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    html {
+        color: var(--dark-gray);
+
+        a:visited {
+            color: var(--dark-gray);
+        }
+    }
+}
