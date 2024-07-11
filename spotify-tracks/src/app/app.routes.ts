@@ -5,5 +5,5 @@ import { AppComponent } from './app.component';
 
 export const routes: Routes = [
     {path: 'redirect', component: AuthRedirectComponent},
-    {path: 'start', component: TracklistSelectComponent}
+    {path: 'start', component: TracklistSelectComponent},
 ];

@@ -12,7 +12,7 @@ export class BackendService {
 
   private baseUrl: string = 'http://localhost:3000';
 
-  constructor(private http: HttpClient) { }
+  constructor( private http: HttpClient ) { }
 
   login(): Observable<LoginResponse> {
     const url = `${this.baseUrl}/api/users/login`;

@@ -1,19 +1,23 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
 import { TokenService } from '../../shared/services/token/token.service';
 
 @Component({
   selector: 'app-auth-redirect',
   standalone: true,
-  imports: [],
-  templateUrl: './auth-redirect.component.html',
+  imports: [RouterOutlet],
+  template: `
+    <p>Redirecting...</p>
+    <router-outlet />
+  `,
   styleUrl: './auth-redirect.component.css'
 })
-export class AuthRedirectComponent implements OnInit {
+export class AuthRedirectComponent {
 
-  constructor (private tokenService: TokenService) { }
-
-  ngOnInit(): void {
-      this.tokenService.getAccessToken();
+  constructor (private tokenService: TokenService) { 
+    this.tokenService.getAccessToken();
   }
+
 
 }
