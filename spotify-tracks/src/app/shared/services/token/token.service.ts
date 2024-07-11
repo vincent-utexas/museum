@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BackendService } from '../backend/backend.service';
+import { AccessTokenResponse } from '../../models/access-token-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -10,10 +11,12 @@ export class TokenService {
 
   getAccessToken() {
     this.backend.getAccessToken().subscribe(
-      (response: any) => {
-        localStorage.setItem('access_token', '123');
-        localStorage.setItem('refresh_token', '456');
-        console.log(response);
+      (response: AccessTokenResponse) => {
+        if ('error' in response) { // handle error
+
+        } else { // sucess!!!!!
+
+        }
       }
     );
   }

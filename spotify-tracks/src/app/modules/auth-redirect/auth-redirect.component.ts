@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { TokenService } from '../services/token/token.service';
+import { TokenService } from '../../shared/services/token/token.service';
 
 @Component({
   selector: 'app-auth-redirect',
