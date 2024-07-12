@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
-import { UserAuthComponent } from './modules/user-auth/user-auth.component';
+import { UserAuthComponent } from './modules/page-user-auth/user-auth.component';
 import { TokenService } from './shared/services/token/token.service';
 
 @Component({
