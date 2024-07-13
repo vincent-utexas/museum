@@ -10,7 +10,7 @@ import { AuthenticationService } from '../../shared/services/auth/authentication
 })
 export class UserAuthComponent {
 
-  constructor (private authService: AuthenticationService) { }
+  constructor ( private authService: AuthenticationService ) { }
 
   login(): void {
     this.authService.login();

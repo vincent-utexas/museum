@@ -1,34 +1,30 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 import { BackendService } from '../backend/backend.service';
+import { StorageService } from '../storage/storage.service';
 import { AccessTokenResponse } from '../../models/access-token-response.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
-  constructor(private backend: BackendService, private router: Router) { }
-
-  setDummy() : void {
-    localStorage.setItem('access_token', 'undefined');
-  }
-
-  hasAccessToken() : boolean {
-    const access_token: string | null = localStorage.getItem('access_token');
-    return access_token != null && access_token != '';
-  }
+  constructor(
+    private backend: BackendService, 
+    private storage: StorageService,
+    private router: Router ) { }
 
   getAccessToken() : void {
-    this.backend.getAccessToken().subscribe(
-      (response: AccessTokenResponse) => {
-        if ('error' in response) {
-          localStorage.removeItem('access_token');
-          localStorage.removeItem('refresh_token');
-          this.router.navigate(['/error']); //todo make error page
+    const response = firstValueFrom(this.backend.getAccessToken());
+    response.then(
+      (body: AccessTokenResponse) => {
+        if ('error' in body) {
+          this.storage.clear();
+          this.router.navigate(['/error']); // todo make error page
         } else {
-          localStorage.setItem('access_token', response.access_token);
-          localStorage.setItem('refresh_token', response.refresh_token);
+          this.storage.setAccessToken(body.access_token);
+          this.storage.setRefreshToken(body.refresh_token);
           this.router.navigate(['/start']);
         }
       }

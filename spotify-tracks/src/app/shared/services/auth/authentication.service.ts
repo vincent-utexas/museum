@@ -9,12 +9,11 @@ import { TokenService } from '../token/token.service';
 })
 export class AuthenticationService {
 
-  constructor(private backend: BackendService, private tokenService: TokenService) { }
+  constructor( private backend: BackendService ) { }
 
-  login() {
+  login() : void {
     this.backend.login().subscribe(
       (response: LoginResponse) => {
-        this.tokenService.setDummy();
         window.location.href = response['redirect'];
       },
     );
