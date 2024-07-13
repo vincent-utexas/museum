@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { LoginResponse } from '../../models/login-response.model';
-import { AccessTokenResponse } from '../../models/access-token-response.model';
+import { AccessTokenResponse, RefreshTokenResponse } from '../../models/access-token-response.model';
 import { SpotifyTracklistItemsResponse, SpotifyTracklistResponse } from '../../models/spotify-api-response.model';
 import { StorageService } from '../storage/storage.service';
 
@@ -32,10 +32,11 @@ export class BackendService {
     return this.http.get(url) as Observable<AccessTokenResponse>;
   }
 
-  refreshAccessToken(): Observable<any> {
-    const url = `${this.baseUrl}/api/tokens/refresh?`;
+  refreshAccessToken(): Observable<RefreshTokenResponse> {
+    const { refresh_token } = this.storage.getItems();
+    const url = `${this.baseUrl}/api/tokens/refresh?${refresh_token}`;
   
-    return this.http.get(url);
+    return this.http.get(url) as Observable<RefreshTokenResponse>;
   }
 
   getTracklist(): Observable<SpotifyTracklistResponse> {

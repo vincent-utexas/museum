@@ -22,6 +22,7 @@ export class SpotifyApiService {
       items: null, }
   }
 
+  // todo check expiry before request
   async getTracklist() : Promise<SpotifyTracklist> { 
     const response = await firstValueFrom(this.backend.getTracklist());
 

@@ -4,9 +4,16 @@ interface AccessTokenSuccessResponse {
     refresh_token: string,
 }
 
-interface AccessTokenDeniedResponse {
+interface RefreshTokenSuccessResponse {
+    access_token: string,
+    expires_in: 3600,
+    refresh_token: string,
+}
+
+interface TokenDeniedResponse {
     status: number,
     error: string,
 }
 
-export type AccessTokenResponse = AccessTokenSuccessResponse | AccessTokenDeniedResponse;
+export type AccessTokenResponse = AccessTokenSuccessResponse | TokenDeniedResponse;
+export type RefreshTokenResponse = RefreshTokenSuccessResponse | TokenDeniedResponse;
