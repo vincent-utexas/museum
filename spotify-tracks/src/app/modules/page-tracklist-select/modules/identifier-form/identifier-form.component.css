@@ -1,8 +1,12 @@
 :host {
+
     input {
+        font-family: var(--plus-jakarta-sans);
+        min-width: 90%;
         background-color: var(--dark-gray);
         padding: 0.25rem;
-        color: white;
+        color: var(--white);
+        border: none;
     }
 
     input::placeholder {
@@ -11,7 +15,9 @@
     }
 
     button {
+        max-width: 5%;
         font-weight: var(--weight-bold);
+        font-size: 1.5rem;
         background-color: transparent;
         color: white;
         border: none;

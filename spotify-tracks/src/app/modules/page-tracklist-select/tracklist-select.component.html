@@ -1,10 +1,8 @@
 <section>
     <p>Let's get started!</p>
-    <app-identifier-form />
-    <br>
-    <img src="/" alt="tracklist cover goes here">
-    <br>
-    <a routerLink="random">Play random</a>
-    <br>
-    <a routerLink="all">Play comprehensive</a>
+    <app-identifier-form (onValidIdentifier)="populateInterface($event)" />
+    <p>{{ tracklist.name }}</p>
+    <img [src]="tracklistImgSrc" alt="tracklist cover goes here">
+    <button (click)="routeToRandom()">Rank random</button>
+    <button (click)="routeToAll()">Rank all</button>
 </section>
