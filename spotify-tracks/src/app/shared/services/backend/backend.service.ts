@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 
 import { LoginResponse } from '../../models/login-response.model';
 import { AccessTokenResponse } from '../../models/access-token-response.model';
-import { SpotifyApiTracklistItemsResponse, SpotifyApiTracklistResponse } from '../../models/spotify-api-response.model';
+import { SpotifyTracklistItemsResponse, SpotifyTracklistResponse } from '../../models/spotify-api-response.model';
 import { StorageService } from '../storage/storage.service';
 
 @Injectable({
@@ -38,23 +38,23 @@ export class BackendService {
     return this.http.get(url);
   }
 
-  getTracklist(): Observable<SpotifyApiTracklistResponse> {
+  getTracklist(): Observable<SpotifyTracklistResponse> {
     const { access_token, identifier } = this.storage.getItems()
     const requestArgs = new URLSearchParams({
       token: access_token,
       identifier: identifier, });
     const url = `${this.baseUrl}/api/fetch/tracklist?${requestArgs.toString()}`;
 
-    return this.http.get(url) as Observable<SpotifyApiTracklistResponse>;
+    return this.http.get(url) as Observable<SpotifyTracklistResponse>;
   }
 
-  getTracklistItems(): Observable<SpotifyApiTracklistItemsResponse> {
+  getTracklistItems(): Observable<SpotifyTracklistItemsResponse> {
     const { access_token, identifier } = this.storage.getItems();
     const requestArgs = new URLSearchParams({
       token: access_token,
       identifier: identifier, });
     const url = `${this.baseUrl}/api/fetch/tracklist_items?${requestArgs.toString()}`;
     
-    return this.http.get(url) as Observable<SpotifyApiTracklistItemsResponse>;
+    return this.http.get(url) as Observable<SpotifyTracklistItemsResponse>;
   }
 }

@@ -19,6 +19,10 @@ export class StorageService {
     localStorage.setItem("identifier", identifier);
   }
 
+  setMode(mode: string) {
+    localStorage.setItem("mode", mode);
+  }
+
   getTokens() {
     return {
       "access_token": localStorage.getItem("access_token") as string,
