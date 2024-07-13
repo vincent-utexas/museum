@@ -14,18 +14,22 @@ import { SpotifyTracklist } from '../../shared/models/spotify-api-response.model
   styleUrl: './tracklist-select.component.css',
 })
 export class TracklistSelectComponent {
-  tracklistImgSrc: string | undefined = "https://i.scdn.co/image/ab67706f00000002578bdd86d879c9a9b3c8a299";
   tracklist: SpotifyTracklist = this.spotifyApiService.generateDummyTracklist();
+  tracklistImgSrc: string | undefined = "https://i.scdn.co/image/ab67706f00000002578bdd86d879c9a9b3c8a299";
+
 
   constructor ( 
     private spotifyApiService: SpotifyApiService,
     private storage: StorageService,
     private router: Router ) { }
 
+
+    //todo notify user of bad playlist
+
   async populateInterface(identifier: string) : Promise<void> {
     this.storage.setIdentifier(identifier);
     this.tracklist = await this.spotifyApiService.getTracklist();
-    console.log(this.tracklist.images);
+    console.log(this.tracklist);
     this.tracklistImgSrc = this.tracklist.images[0].url;
   }
 
