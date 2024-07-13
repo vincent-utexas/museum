@@ -12,12 +12,11 @@
         font-family: var(--plus-jakarta-sans);
         font-weight: var(--weight-bold);
         min-width: 100%;
-        border: none;
         display: block;
         margin: 0.5rem 0rem;
     }
 
-    button:hover {
+    button:hover:not(:disabled) {
         transform: scale(110%);
     }
 }

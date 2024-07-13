@@ -12,17 +12,19 @@ body {
     font-weight: var(--weight-med);
 
     .font-large {
-        font-size: 2rem;
+        font-size: large;
     }
 
     .font-small {
-        font-size: 0.8rem;
+        font-size: small;
     }
 
     button {
         cursor: pointer;
-        border-radius: 1rem;
+        border: none;
+        border-radius: 0.5rem;
         padding: 0.5rem;
+        font-family: var(--plus-jakarta-sans);
     }
 }
 

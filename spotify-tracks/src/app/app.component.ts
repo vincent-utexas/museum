@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 import { UserAuthComponent } from './modules/page-user-auth/user-auth.component';
@@ -10,16 +10,8 @@ import { UserAuthComponent } from './modules/page-user-auth/user-auth.component'
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit {
+export class AppComponent {
   title = 'spotify-tracks';
-  userAuthenticated: boolean = false;
-
-  ngOnInit(): void {
-      this.userAuthenticated = localStorage.getItem('access_token') != null;
-
-      //todo fix: authentication -> redirect -> start -> root page
-      //todo should redirect to start with access token, currently shows empty page
-  }
-  
+  userAuthenticated = localStorage.getItem('access_token') != null;
 
 }

@@ -1,7 +1,5 @@
 @if (!userAuthenticated) {
   <app-user-auth />
 } @else {
-  <main class="content-flex">
-    <router-outlet />
-  </main>
+  <router-outlet />
 }
