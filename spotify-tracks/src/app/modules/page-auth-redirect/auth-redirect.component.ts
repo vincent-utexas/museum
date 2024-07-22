@@ -11,7 +11,7 @@ import { TokenService } from '../../shared/services/token/token.service';
     <p>Redirecting...</p>
     <router-outlet />
   `,
-  styleUrl: './auth-redirect.component.css'
+  styles: ``
 })
 export class AuthRedirectComponent {
 

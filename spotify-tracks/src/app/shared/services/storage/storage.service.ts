@@ -23,6 +23,10 @@ export class StorageService {
     localStorage.setItem("mode", mode);
   }
 
+  getMode() : string {
+    return localStorage.getItem("mode") as string;
+  }
+
   getTokens() {
     return {
       "access_token": localStorage.getItem("access_token") as string,
