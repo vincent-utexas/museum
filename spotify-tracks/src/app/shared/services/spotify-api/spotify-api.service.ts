@@ -14,12 +14,12 @@ export class SpotifyApiService {
   // todo fill out dummy variables
   generateDummyTracklist() : SpotifyTracklist & SpotifyTracklistItems {
     return {
-      id: null,
+      id: "",
       images: [],
       name: "No tracklist found",
       type: "playlist",
-      uri: null,
-      items: null, }
+      uri: "",
+      items: [], }
   }
 
   async getTracklist(identifier: string) : Promise<SpotifyTracklist> { 

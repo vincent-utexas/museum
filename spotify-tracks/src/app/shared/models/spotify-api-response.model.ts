@@ -44,11 +44,11 @@ interface SpotifyApiTracklistResponse {
 }
 
 interface TruncatedSpotifyTracklistResponse {
-    id: string | null,
+    id: string,
     images: ImageObject[],
-    name: string | null,
+    name: string,
     type: "playlist",
-    uri: string | null,
+    uri: string,
 }
 
 interface SpotifyApiTracklistItemsResponse {
@@ -62,7 +62,7 @@ interface SpotifyApiTracklistItemsResponse {
 }
 
 interface TruncatedSpotifyTracklistItemsResponse {
-    items: PlaylistTrackObject[] | null,
+    items: PlaylistTrackObject[],
 }
 
 interface ImageObject {
