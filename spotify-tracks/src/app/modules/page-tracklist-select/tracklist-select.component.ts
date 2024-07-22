@@ -23,20 +23,17 @@ export class TracklistSelectComponent {
     private router: Router ) { }
 
   async populateInterface(identifier: string) : Promise<void> {
-    this.storage.setIdentifier(identifier);
     this.tracklist = await this.spotifyApiService.getTracklist();
     console.log(this.tracklist.images);
     this.tracklistImgSrc = this.tracklist.images[0].url;
   }
 
   routeToRandom() : void {
-    this.storage.setMode('random');
-    this.router.navigate(['/play']);
+    this.router.navigate(['/play' + this.storage.createGameParameters("random", this.tracklist.id!)]);
   }
 
   routeToAll() : void {
-    this.storage.setMode('all');
-    this.router.navigate(['/play']);
+    this.router.navigate(['/play' + this.storage.createGameParameters("all", this.tracklist.id!)]);
   }
 
 }

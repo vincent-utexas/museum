@@ -15,17 +15,23 @@ export class StorageService {
     localStorage.setItem("refresh_token", token);
   }
 
-  setIdentifier(identifier: string) {
-    localStorage.setItem("identifier", identifier);
+  createGameParameters(mode: string, identifier: string): string {
+    const parameters = new URLSearchParams({
+      mode: mode,
+      identifier: identifier, })
+    
+    return "?" + parameters.toString();
   }
 
-  setMode(mode: string) {
-    localStorage.setItem("mode", mode);
+  getGameParameters() {
+    const parameters = new URLSearchParams(window.location.search);
+    return {
+      mode: parameters.get("mode"),
+      identifier: parameters.get("identifier"),
+    }
   }
 
-  getMode() : string {
-    return localStorage.getItem("mode") as string;
-  }
+
 
   getTokens() {
     return {
@@ -38,7 +44,6 @@ export class StorageService {
     return {
       "access_token": localStorage.getItem("access_token") as string,
       "refresh_token": localStorage.getItem("refresh_token") as string,
-      "identifier": localStorage.getItem("identifier") as string,
     }
   }
 
