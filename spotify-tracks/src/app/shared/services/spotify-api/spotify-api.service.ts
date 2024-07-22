@@ -22,8 +22,8 @@ export class SpotifyApiService {
       items: null, }
   }
 
-  async getTracklist() : Promise<SpotifyTracklist> { 
-    const response = await firstValueFrom(this.backend.getTracklist());
+  async getTracklist(identifier: string) : Promise<SpotifyTracklist> { 
+    const response = await firstValueFrom(this.backend.getTracklist(identifier));
 
     if ('error' in response) {
       return this.generateDummyTracklist();
@@ -32,8 +32,8 @@ export class SpotifyApiService {
     return response;
   }
 
-  async getTracklistItems() : Promise<SpotifyTracklistItems> {
-    const response = await firstValueFrom(this.backend.getTracklistItems());
+  async getTracklistItems(identifier: string) : Promise<SpotifyTracklistItems> {
+    const response = await firstValueFrom(this.backend.getTracklistItems(identifier));
 
     if ('error' in response) {
       return this.generateDummyTracklist();

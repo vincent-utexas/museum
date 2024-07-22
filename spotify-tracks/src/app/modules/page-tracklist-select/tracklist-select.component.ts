@@ -23,7 +23,7 @@ export class TracklistSelectComponent {
     private router: Router ) { }
 
   async populateInterface(identifier: string) : Promise<void> {
-    this.tracklist = await this.spotifyApiService.getTracklist();
+    this.tracklist = await this.spotifyApiService.getTracklist(identifier);
     console.log(this.tracklist.images);
     this.tracklistImgSrc = this.tracklist.images[0].url;
   }

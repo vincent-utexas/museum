@@ -38,8 +38,8 @@ export class BackendService {
     return this.http.get(url);
   }
 
-  getTracklist(): Observable<SpotifyTracklistResponse> {
-    const { access_token, identifier } = this.storage.getItems()
+  getTracklist(identifier: string): Observable<SpotifyTracklistResponse> {
+    const { access_token } = this.storage.getItems()
     const requestArgs = new URLSearchParams({
       token: access_token,
       identifier: identifier, });
@@ -48,8 +48,8 @@ export class BackendService {
     return this.http.get(url) as Observable<SpotifyTracklistResponse>;
   }
 
-  getTracklistItems(): Observable<SpotifyTracklistItemsResponse> {
-    const { access_token, identifier } = this.storage.getItems();
+  getTracklistItems(identifier: string): Observable<SpotifyTracklistItemsResponse> {
+    const { access_token } = this.storage.getItems();
     const requestArgs = new URLSearchParams({
       token: access_token,
       identifier: identifier, });
