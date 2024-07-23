@@ -15,14 +15,6 @@ export class StorageService {
     localStorage.setItem("refresh_token", token);
   }
 
-  setIdentifier(identifier: string) {
-    localStorage.setItem("identifier", identifier);
-  }
-
-  setMode(mode: string) {
-    localStorage.setItem("mode", mode);
-  }
-
   getTokens() {
     return {
       "access_token": localStorage.getItem("access_token") as string,
@@ -34,7 +26,6 @@ export class StorageService {
     return {
       "access_token": localStorage.getItem("access_token") as string,
       "refresh_token": localStorage.getItem("refresh_token") as string,
-      "identifier": localStorage.getItem("identifier") as string,
     }
   }
 

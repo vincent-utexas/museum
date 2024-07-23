@@ -3,7 +3,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { BackendService } from '../backend/backend.service';
 import { StorageService } from '../storage/storage.service';
-import { AccessTokenResponse, RefreshTokenResponse } from '../../models/access-token-response.model';
+import { TokenResponse } from '../../models/access-token-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -14,7 +14,7 @@ export class TokenService {
   getAccessToken() : void {
     const response = firstValueFrom(this.backend.getAccessToken());
     response.then(
-      (body: AccessTokenResponse) => {
+      (body: TokenResponse) => {
         if ('error' in body) {
           this.storage.clear();
         } else {
@@ -27,7 +27,7 @@ export class TokenService {
   refreshAccessToken() : void {
     const response = firstValueFrom(this.backend.refreshAccessToken());
     response.then(
-      (body: RefreshTokenResponse) => {
+      (body: TokenResponse) => {
         if ('error' in body) {
           this.storage.clear();
           console.error("[error] refresh token request failed.");

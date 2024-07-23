@@ -1,13 +1,9 @@
-interface AccessTokenSuccessResponse {
-    status: number,
+interface TokenSuccessResponse {
     access_token: string,
     refresh_token: string,
-}
-
-interface RefreshTokenSuccessResponse {
-    access_token: string,
+    token_type: "Bearer",
     expires_in: 3600,
-    refresh_token: string,
+    scope: string,
 }
 
 interface TokenDeniedResponse {
@@ -15,5 +11,4 @@ interface TokenDeniedResponse {
     error: string,
 }
 
-export type AccessTokenResponse = AccessTokenSuccessResponse | TokenDeniedResponse;
-export type RefreshTokenResponse = RefreshTokenSuccessResponse | TokenDeniedResponse;
+export type TokenResponse = TokenSuccessResponse | TokenDeniedResponse;

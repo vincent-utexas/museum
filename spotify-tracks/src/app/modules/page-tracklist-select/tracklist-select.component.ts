@@ -3,7 +3,6 @@ import { Router } from '@angular/router';
 
 import { IdentifierFormComponent } from './modules/identifier-form/identifier-form.component';
 import { SpotifyApiService } from '../../shared/services/spotify-api/spotify-api.service';
-import { StorageService } from '../../shared/services/storage/storage.service';
 import { SpotifyTracklist } from '../../shared/models/spotify-api-response.model';
 
 @Component({
@@ -20,27 +19,22 @@ export class TracklistSelectComponent {
 
   constructor ( 
     private spotifyApiService: SpotifyApiService,
-    private storage: StorageService,
     private router: Router ) { }
 
+  async populateInterface(identifier: string) : Promise<void> { 
+    // todo need error handling logic
+    // todo prefer: frontend should receive perfect info or an error not dummy info
 
-    //todo notify user of bad playlist
-
-  async populateInterface(identifier: string) : Promise<void> {
-    this.storage.setIdentifier(identifier);
-    this.tracklist = await this.spotifyApiService.getTracklist();
-    console.log(this.tracklist);
+    this.tracklist = await this.spotifyApiService.getTracklist(identifier);
     this.tracklistImgSrc = this.tracklist.images[0].url;
   }
 
   routeToRandom() : void {
-    this.storage.setMode('random');
-    this.router.navigate(['/play']);
+    this.router.navigate(['/play'], { queryParams: { mode: "random", identifier: this.tracklist.id }});
   }
 
   routeToAll() : void {
-    this.storage.setMode('all');
-    this.router.navigate(['/play']);
+    this.router.navigate(['/play'], { queryParams: { mode: "all", identifier: this.tracklist.id }});
   }
 
 }

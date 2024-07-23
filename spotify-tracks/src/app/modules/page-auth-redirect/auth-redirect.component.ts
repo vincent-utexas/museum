@@ -12,7 +12,7 @@ import { StorageService } from '../../shared/services/storage/storage.service';
     <p>Redirecting...</p>
     <router-outlet />
   `,
-  styleUrl: './auth-redirect.component.css'
+  styles: ``
 })
 export class AuthRedirectComponent implements OnInit {
 

@@ -14,17 +14,16 @@ export class SpotifyApiService {
   // todo fill out dummy variables
   generateDummyTracklist() : SpotifyTracklist & SpotifyTracklistItems {
     return {
-      id: null,
+      id: "",
       images: [],
       name: "No tracklist found",
       type: "playlist",
-      uri: null,
-      items: null, }
+      uri: "",
+      items: [], }
   }
 
-  // todo check expiry before request
-  async getTracklist() : Promise<SpotifyTracklist> { 
-    const response = await firstValueFrom(this.backend.getTracklist());
+  async getTracklist(identifier: string) : Promise<SpotifyTracklist> { 
+    const response = await firstValueFrom(this.backend.getTracklist(identifier));
 
     if ('error' in response) {
       return this.generateDummyTracklist();
@@ -33,8 +32,8 @@ export class SpotifyApiService {
     return response;
   }
 
-  async getTracklistItems() : Promise<SpotifyTracklistItems> {
-    const response = await firstValueFrom(this.backend.getTracklistItems());
+  async getTracklistItems(identifier: string) : Promise<SpotifyTracklistItems> {
+    const response = await firstValueFrom(this.backend.getTracklistItems(identifier));
 
     if ('error' in response) {
       return this.generateDummyTracklist();
@@ -42,4 +41,5 @@ export class SpotifyApiService {
 
     return response;
   }
+
 }
