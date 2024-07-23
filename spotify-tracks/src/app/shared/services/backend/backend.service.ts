@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
 import { LoginResponse } from '../../models/login-response.model';
-import { AccessTokenResponse } from '../../models/access-token-response.model';
+import { TokenResponse } from '../../models/access-token-response.model';
 import { SpotifyTracklistItemsResponse, SpotifyTracklistResponse } from '../../models/spotify-api-response.model';
 import { StorageService } from '../storage/storage.service';
 
@@ -22,14 +22,14 @@ export class BackendService {
     return this.http.get(url) as Observable<LoginResponse>;
   }
   
-  getAccessToken(): Observable<AccessTokenResponse> {
+  getAccessToken(): Observable<TokenResponse> {
     const params = new URLSearchParams(window.location.search);
     const requestArgs = new URLSearchParams({
       code: params.get('code') as string,
       state: params.get('state') as string, });
     const url = `${this.baseUrl}/api/tokens/access?${requestArgs.toString()}`;
 
-    return this.http.get(url) as Observable<AccessTokenResponse>;
+    return this.http.get(url) as Observable<TokenResponse>;
   }
 
   refreshAccessToken(): Observable<any> {

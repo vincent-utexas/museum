@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 
 import { BackendService } from '../backend/backend.service';
 import { StorageService } from '../storage/storage.service';
-import { AccessTokenResponse } from '../../models/access-token-response.model';
+import { TokenResponse } from '../../models/access-token-response.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,7 +18,7 @@ export class TokenService {
   getAccessToken() : void {
     const response = firstValueFrom(this.backend.getAccessToken());
     response.then(
-      (body: AccessTokenResponse) => {
+      (body: TokenResponse) => {
         if ('error' in body) {
           this.storage.clear();
           this.router.navigate(['/error']); // todo make error page

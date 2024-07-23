@@ -22,9 +22,12 @@ export class TracklistSelectComponent {
     private storage: StorageService,
     private router: Router ) { }
 
-  async populateInterface(identifier: string) : Promise<void> {
+  async populateInterface(identifier: string) : Promise<void> { 
+    // todo need error handling logic
+    // prefer: frontend should receive perfect info or an error not dummy info
+    // want the backend to handle errors
+
     this.tracklist = await this.spotifyApiService.getTracklist(identifier);
-    console.log(this.tracklist.images);
     this.tracklistImgSrc = this.tracklist.images[0].url;
   }
 
