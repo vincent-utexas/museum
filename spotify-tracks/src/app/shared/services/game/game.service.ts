@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { SpotifyTracklistItems } from '../../models/spotify-api-response.model';
+import { SpotifyTracklist, SpotifyTrack } from '../../models/spotify-api-response.model';
 import { StorageService } from '../storage/storage.service';
 
 @Injectable({
@@ -13,11 +13,8 @@ export class GameService {
     return Math.floor(Math.random() * max);
   }
 
-  getNextTracks(tracklist: SpotifyTracklistItems[]) : SpotifyTracklistItems[] {
-    const n = tracklist.length;
-    if (n <= 1) {
-      return tracklist;
-    }
+  getNextTracks(tracklist: SpotifyTracklist) : SpotifyTrack[] {
+    const n = tracklist.items.length;
 
     let idx1 = this.rng(n);
     let idx2 = this.rng(n);
@@ -25,7 +22,10 @@ export class GameService {
       idx2 = this.rng(n);
     }
 
-    return [tracklist[idx1], tracklist[idx2]];
+    const track1: SpotifyTrack = {...tracklist.items[idx1].track, rank: 0};
+    const track2: SpotifyTrack = {...tracklist.items[idx2].track, rank: 0};
+
+    return [track1, track2];
   }
 
 

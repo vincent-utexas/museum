@@ -1,3 +1,3 @@
-<app-play-card [track]="track1"/>
+<app-play-card [track]="activeTracks[0]" [cardId]="0" (onSelectTrack)="handleSelectTrack($event)"/>
 <div>&mdash; {{tracksRemaining}} &mdash;</div>
-<app-play-card [track]="track2"/>
+<app-play-card [track]="activeTracks[1]" [cardId]="1" (onSelectTrack)="handleSelectTrack($event)"/>

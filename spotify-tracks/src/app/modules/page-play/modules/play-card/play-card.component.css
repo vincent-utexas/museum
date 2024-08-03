@@ -3,10 +3,15 @@
     button {
         background-color: transparent;
         color: var(--white);
+        line-height: 0rem;
     }
 
     button:hover {
         text-decoration: underline;
+    }
+
+    img:hover {
+        cursor: pointer;
     }
 
     /* Phones and smaller */

@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { BackendService } from '../backend/backend.service';
-import { SpotifyTracklist, SpotifyTracklistItems } from '../../models/spotify-api-response.model';
+import { SpotifyTracklist, SpotifyTracklistMetadata } from '../../models/spotify-api-response.model';
+import { TokenService } from '../token/token.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyApiService {
 
-  constructor( private backend: BackendService ) { }
+  constructor( private backend: BackendService, private tokenService: TokenService ) { }
 
   // todo fill out dummy variables
-  generateDummyTracklist() : SpotifyTracklist & SpotifyTracklistItems {
+  generateDummyTracklist() : SpotifyTracklistMetadata & SpotifyTracklist {
     return {
       id: "",
       images: [],
@@ -22,7 +23,9 @@ export class SpotifyApiService {
       items: [], }
   }
 
-  async getTracklist(identifier: string) : Promise<SpotifyTracklist> { 
+  //todo handle refresh token expiry (maybe 24 hrs)
+  async getTracklist(identifier: string) : Promise<SpotifyTracklistMetadata> {
+    this.tokenService.refreshAsNeeded();
     const response = await firstValueFrom(this.backend.getTracklist(identifier));
 
     if ('error' in response) {
@@ -32,7 +35,8 @@ export class SpotifyApiService {
     return response;
   }
 
-  async getTracklistItems(identifier: string) : Promise<SpotifyTracklistItems> {
+  async getTracklistItems(identifier: string) : Promise<SpotifyTracklist> {
+    this.tokenService.refreshAsNeeded();
     const response = await firstValueFrom(this.backend.getTracklistItems(identifier));
 
     if ('error' in response) {

@@ -18,7 +18,7 @@ export class TokenService {
         if ('error' in body) {
           this.storage.clear();
         } else {
-          this.storage.setAccessToken(body.access_token);
+          this.storage.setAccessToken(body.access_token, body.expires_in);
           this.storage.setRefreshToken(body.refresh_token);
         }
       });
@@ -32,10 +32,17 @@ export class TokenService {
           this.storage.clear();
           console.error("[error] refresh token request failed.");
         } else {
-          this.storage.setAccessToken(body.access_token);
+          this.storage.setAccessToken(body.access_token, body.expires_in);
           this.storage.setRefreshToken(body.refresh_token);
         }
       });
+  }
+
+  refreshAsNeeded() : void { // todo check if refresh token is invalid
+    const expiry: number = parseInt(this.storage.getItems().expiry, 10);
+    if (Date.now() >= expiry) {
+      this.refreshAccessToken();
+    }
   }
 
 }

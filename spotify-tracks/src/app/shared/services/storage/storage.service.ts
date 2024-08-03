@@ -7,8 +7,10 @@ export class StorageService {
 
   constructor() { }
 
-  setAccessToken(token: string) {
+  setAccessToken(token: string, expiresInSecs: number = 3600) {
+    const expiry: number = Date.now() + (expiresInSecs * 1000);
     localStorage.setItem("access_token", token);
+    localStorage.setItem("expiry", expiry.toString());
   }
 
   setRefreshToken(token: string) {
@@ -26,15 +28,11 @@ export class StorageService {
     return {
       "access_token": localStorage.getItem("access_token") as string,
       "refresh_token": localStorage.getItem("refresh_token") as string,
+      "expiry": localStorage.getItem("expiry") as string,
     }
   }
 
   clear() {
     localStorage.clear();
   }
-
-  checkTokenExpiry() { // todo handle expiry and refresh, make changes to `app.component.ts`
-
-  }
-
 }

@@ -2,7 +2,7 @@
     <p>Let's get started!</p>
     <app-identifier-form (onValidIdentifier)="populateInterface($event)" />
     <p>{{ tracklist.name }}</p>
-    <img [src]="tracklistImgSrc" alt="tracklist cover goes here">
+    <img [src]="tracklistImgSrc" alt="tracklist_cover">
     <button (click)="routeToRandom()" [disabled]="tracklist.uri == ''">Rank random</button>
     <button (click)="routeToAll()" [disabled]="tracklist.uri == ''">Rank all</button>
 </section>
