@@ -1,9 +1,24 @@
-export interface TokenRequest extends Record<string, string> {
-    grant_type: 'authorization_code',
+interface TokenRequest {
+    grant_type: 'authorization_code' | 'refresh_token',
+    client_id: string,
+}
+
+export interface AccessTokenRequest extends TokenRequest, Record<string, string> {
     code: string,
     redirect_uri: string,
-    client_id: string,
     code_verifier: string,
+}
+
+export interface RefreshTokenRequest extends TokenRequest, Record<string, string> {
+    refresh_token: string,
+}
+
+export interface RequestPayload {
+    method: 'POST',
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+    },
+    body: URLSearchParams,
 }
 
 interface TokenSuccessResponse {

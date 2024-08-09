@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 
 import { StorageService } from '../storage/storage.service';
 import { SpotifyApiRequest, SpotifyTracklist, SpotifyTracklistResponse, SpotifyTracklistMetadata, SpotifyTracklistMetadataResponse } from '../../models/spotify-api-response.model';
+import { TokenService } from '../token/token.service';
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +10,7 @@ import { SpotifyApiRequest, SpotifyTracklist, SpotifyTracklistResponse, SpotifyT
 export class SpotifyApiService {
   BASE_URL = "https://api.spotify.com/v1";
 
-  constructor( private storage: StorageService ) { }
+  constructor( private storage: StorageService, private tokenService: TokenService ) { }
 
   generateDummyTracklist(): SpotifyTracklistMetadata {
     return {
@@ -22,6 +23,7 @@ export class SpotifyApiService {
 
   async getTracklistMetadata(identifier: string): Promise<SpotifyTracklistMetadata> {
     const payload = this.getPayload();
+    this.tokenService.refreshAsNeeded();
 
     const response = await fetch(this.BASE_URL + `/playlists/${identifier}`, payload);
     let body: SpotifyTracklistMetadataResponse = await response.json();
@@ -35,6 +37,7 @@ export class SpotifyApiService {
 
   async getTracklist(identifier: string): Promise<SpotifyTracklist> {
     const payload = this.getPayload();
+    this.tokenService.refreshAsNeeded();
 
     const response = await fetch(this.BASE_URL + `/playlists/${identifier}/tracks`, payload);
     let body: SpotifyTracklistResponse = await response.json();
@@ -48,6 +51,7 @@ export class SpotifyApiService {
 
   async getAlbumMetadata(identifier: string): Promise<SpotifyTracklistMetadata> {
     const payload = this.getPayload();
+    this.tokenService.refreshAsNeeded();
 
     const response = await fetch(this.BASE_URL + `/albums/${identifier}`, payload);
     let body: SpotifyTracklistMetadataResponse = await response.json();
@@ -61,6 +65,7 @@ export class SpotifyApiService {
 
   async getAlbum(identifier: string): Promise<SpotifyTracklist> {
     const payload = this.getPayload();
+    this.tokenService.refreshAsNeeded();
 
     const response = await fetch(this.BASE_URL + `/albums/${identifier}/tracks`, payload);
     let body: SpotifyTracklistResponse = await response.json();

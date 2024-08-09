@@ -23,10 +23,10 @@ export class AuthRedirectComponent implements OnInit {
 
   ngOnInit(): void {
       this.tokenService.getAccessToken();
-      if ('access_token' in this.storage.getItems()) {
-        this.router.navigate(['/start']); // todo fix auth setting access token
+      if (this.storage.getItems().access_token !== "") {
+        this.router.navigate(['/start']);
       } else {
-        this.router.navigate(['/error']); // todo make error page
+        this.router.navigate(['/auth']);
       }
   }
 

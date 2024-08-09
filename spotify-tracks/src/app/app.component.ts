@@ -12,6 +12,5 @@ import { UserAuthComponent } from './modules/page-user-auth/user-auth.component'
 })
 export class AppComponent {
   title = 'spotify-tracks';
-  userAuthenticated = localStorage.getItem('access_token') != null;
 
 }

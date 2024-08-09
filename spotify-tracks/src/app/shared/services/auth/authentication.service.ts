@@ -19,7 +19,6 @@ export class AuthenticationService {
     const hashed = await this.sha256(codeVerifier);
     const codeChallenge = this.base64encode(hashed);
     this.storage.setCodeVerifer(codeVerifier);
-    this.storage.setAccessToken("");
 
     const params: AuthRequest = {
       response_type: 'code',

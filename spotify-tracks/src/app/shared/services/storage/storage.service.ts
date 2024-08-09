@@ -38,7 +38,7 @@ export class StorageService {
     return {
       "access_token": localStorage.getItem("access_token") as string,
       "refresh_token": localStorage.getItem("refresh_token") as string,
-      "expiry": localStorage.getItem("expiry") as string,
+      "expiry": Number(localStorage.getItem("expiry")) as number,
     }
   }
 

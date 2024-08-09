@@ -1,5 +1,5 @@
 import { Component, numberAttribute, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { PlayCardComponent } from './modules/play-card/play-card.component';
 import { GameService } from '../../shared/services/game/game.service';
@@ -20,12 +20,13 @@ export class PlayComponent implements OnInit {
   tracksRemaining: number = Infinity;
   tracklist!: SpotifyTrack[];
   activeTracks!: SpotifyTrack[];
-  rankedTracks!: SpotifyTrack[]; // tracks in ranked order
+  rankedTracks: SpotifyTrack[] = []; // tracks in ranked order
 
   constructor (
     private gameService: GameService, 
     private spotifyApiService: SpotifyApiService,
-    private route: ActivatedRoute ) { }
+    private router: Router,
+    private route: ActivatedRoute ) {}
   
   async ngOnInit(): Promise<void> {
     this.mode = this.route.snapshot.queryParamMap.get("mode") as string;
@@ -51,7 +52,10 @@ export class PlayComponent implements OnInit {
     this.activeTracks[idx].rank++;
     this.tracksRemaining = this.tracklist.length;
     
-    if (this.tracksRemaining > 2) {
+    if (this.tracksRemaining < 2) {
+      this.rankedTracks.push(this.activeTracks[idx]);
+      this.router.navigate(['/end']);
+    } else {
       this.activeTracks = this.gameService.getNextTracks(this.tracklist);
     }
   }
