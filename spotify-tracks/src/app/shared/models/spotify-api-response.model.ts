@@ -1,25 +1,35 @@
-import { ImageObject, PlaylistTrackObject, TrackObject, SpotifyUser } from "./spotify-api-util.model";
+import { ImageObject, PlaylistTrackObject, TrackObject, SpotifyUser, SimplifiedTrackObject, SimplifiedArtistObject, AlbumObject } from "./spotify-api-utils.model";
 
 // Full versions are received by the backend and converted to truncated versions
 // in spotify-api.service.ts
-export type SpotifyTracklistResponse = SpotifyApiTracklistResponse | SpotifyApiDeniedResponse;
-export type SpotifyTracklistItemsResponse = SpotifyApiTracklistItemsResponse | SpotifyApiDeniedResponse;
+export type SpotifyTracklistMetadataResponse = SpotifyTracklistMetadataFull | SpotifyApiDeniedResponse;
+export type SpotifyTracklistResponse = SpotifyApiTracklistResponseFull | SpotifyApiDeniedResponse;
 
 // Compact versions used in the app
 export interface SpotifyTracklistMetadata {
     id: string,
     images: ImageObject[],
     name: string,
-    type: "playlist",
     uri: string,
 }
 
 export interface SpotifyTracklist {
-    items: PlaylistTrackObject[],
+    items: PlaylistTrackObject[], //| SimplifiedTrackObject[],
 }
 
-export interface SpotifyTrack extends TrackObject {
+export interface SpotifyTrack {
+    name: string,
+    preview_url: string | null,
+    artists: SimplifiedArtistObject[],
+    album: AlbumObject,
     rank: number,
+}
+
+export interface SpotifyApiRequest {
+    method: 'GET' | 'POST' | 'PUT' | 'DELETE',
+    headers: {
+        'Authorization': string,
+    }
 }
 
 interface SpotifyApiDeniedResponse {
@@ -30,7 +40,7 @@ interface SpotifyApiDeniedResponse {
 }
 
 // Full versions are received by the backend
-interface SpotifyApiTracklistResponse {
+interface SpotifyTracklistMetadataFull extends SpotifyTracklistMetadata {
     collaborative: boolean,
     description: string | null,
     external_urls: {
@@ -57,7 +67,7 @@ interface SpotifyApiTracklistResponse {
     uri: string,
 }
 
-interface SpotifyApiTracklistItemsResponse {
+interface SpotifyApiTracklistResponseFull extends SpotifyTracklist {
     href: string,
     limit: number,
     next: string | null,

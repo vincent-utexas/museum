@@ -15,26 +15,36 @@ import { SpotifyTracklistMetadata } from '../../shared/models/spotify-api-respon
 export class TracklistSelectComponent {
   tracklist: SpotifyTracklistMetadata = this.spotifyApiService.generateDummyTracklist();
   tracklistImgSrc: string | undefined = "https://i.scdn.co/image/ab67706f00000002578bdd86d879c9a9b3c8a299";
+  kind: "tracklist" | "album" | "" = "";
 
 
   constructor ( 
     private spotifyApiService: SpotifyApiService,
     private router: Router ) { }
 
-  async populateInterface(identifier: string) : Promise<void> { 
-    // todo need error handling logic
-    // todo prefer: frontend should receive perfect info or an error not dummy info
+  async populateInterface(identifier: string) : Promise<void> {
+    const extractID = () => {
+      const regex = /https:\/\/open\.spotify\.com\/(album|playlist|track)\/([a-zA-Z0-9]{22})/;
+      return identifier.match(regex)![2];
+    }
 
-    this.tracklist = await this.spotifyApiService.getTracklist(identifier);
+    if (identifier.includes('album')) {
+      this.tracklist = await this.spotifyApiService.getAlbumMetadata(extractID());
+      this.kind = "album";
+    } else if (identifier.includes('playlist')) {
+      this.tracklist = await this.spotifyApiService.getTracklistMetadata(extractID());
+      this.kind = "tracklist";
+    }
+
     this.tracklistImgSrc = this.tracklist.images[0].url;
   }
 
   routeToRandom() : void {
-    this.router.navigate(['/play'], { queryParams: { mode: "random", identifier: this.tracklist.id }});
+    this.router.navigate(['/play'], { queryParams: { mode: "random", identifier: this.tracklist.id, kind: this.kind }});
   }
 
   routeToAll() : void {
-    this.router.navigate(['/play'], { queryParams: { mode: "all", identifier: this.tracklist.id }});
+    this.router.navigate(['/play'], { queryParams: { mode: "all", identifier: this.tracklist.id, kind: this.kind }});
   }
 
 }

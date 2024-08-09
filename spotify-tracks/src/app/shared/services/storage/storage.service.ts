@@ -17,6 +17,16 @@ export class StorageService {
     localStorage.setItem("refresh_token", token);
   }
 
+  setCodeVerifer(token: string) {
+    localStorage.setItem("code_verifier", token);
+  }
+
+  consumeCodeVerifier(): string {
+    const token = localStorage.getItem("code_verifier")!;
+    localStorage.removeItem("code_verifier");
+    return token;
+  }
+
   getTokens() {
     return {
       "access_token": localStorage.getItem("access_token") as string,

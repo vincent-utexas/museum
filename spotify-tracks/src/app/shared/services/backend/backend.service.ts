@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { LoginResponse } from '../../models/login-response.model';
 import { TokenResponse } from '../../models/access-token-response.model';
 import { SpotifyTracklistItemsResponse, SpotifyTracklistResponse } from '../../models/spotify-api-response.model';
 import { StorageService } from '../storage/storage.service';
@@ -15,12 +14,6 @@ export class BackendService {
   private baseUrl: string = 'http://localhost:3000';
 
   constructor( private http: HttpClient, private storage: StorageService ) { }
-
-  login(): Observable<LoginResponse> {
-    const url = `${this.baseUrl}/api/users/login`;
-
-    return this.http.get(url) as Observable<LoginResponse>;
-  }
   
   getAccessToken(): Observable<TokenResponse> {
     const params = new URLSearchParams(window.location.search);

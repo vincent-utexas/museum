@@ -16,20 +16,14 @@ export interface SimplifiedArtistObject {
     uri: string,
 }
 
-export interface ArtistObject {
-    external_urls: {
-        spotify: string, },
+export interface ArtistObject extends SimplifiedArtistObject {
     followers: {
         href: string | null,
         total: number, },
     genres: string[],
-    href: string,
-    id: string,
     images: ImageObject[],
-    name: string,
     popularity: number,
     type: "artist",
-    uri: string,
 }
 
 export interface SimplifiedTrackObject {
@@ -64,11 +58,11 @@ export interface SimplifiedTrackObject {
 export interface TrackObject {
     album: AlbumObject,
     artists: ArtistObject[],
-    available_markets: string,
+    available_markets: string[],
     disc_number: number,
     duration_ms: number,
     explicit: boolean,
-    external_ids: {
+    external_ids?: {
         isrc: string,
         ean: string,
         upc: string, },
@@ -81,7 +75,7 @@ export interface TrackObject {
     restrictions: {
         reason: 'market' | 'product' | 'explicit' | string, },
     name: string,
-    popularity: number,
+    popularity?: number,
     preview_url: string | null,
     track_number: number,
     type: "track",

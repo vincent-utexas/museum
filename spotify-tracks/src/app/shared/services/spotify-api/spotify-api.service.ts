@@ -1,49 +1,85 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 
-import { BackendService } from '../backend/backend.service';
-import { SpotifyTracklist, SpotifyTracklistMetadata } from '../../models/spotify-api-response.model';
-import { TokenService } from '../token/token.service';
+import { StorageService } from '../storage/storage.service';
+import { SpotifyApiRequest, SpotifyTracklist, SpotifyTracklistResponse, SpotifyTracklistMetadata, SpotifyTracklistMetadataResponse } from '../../models/spotify-api-response.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SpotifyApiService {
+  BASE_URL = "https://api.spotify.com/v1";
 
-  constructor( private backend: BackendService, private tokenService: TokenService ) { }
+  constructor( private storage: StorageService ) { }
 
-  // todo fill out dummy variables
-  generateDummyTracklist() : SpotifyTracklistMetadata & SpotifyTracklist {
+  generateDummyTracklist(): SpotifyTracklistMetadata {
     return {
-      id: "",
+      id: '',
       images: [],
-      name: "No tracklist found",
-      type: "playlist",
-      uri: "",
-      items: [], }
+      name: 'No tracklist selected',
+      uri: '',
+    }
   }
 
-  //todo handle refresh token expiry (maybe 24 hrs)
-  async getTracklist(identifier: string) : Promise<SpotifyTracklistMetadata> {
-    this.tokenService.refreshAsNeeded();
-    const response = await firstValueFrom(this.backend.getTracklist(identifier));
+  async getTracklistMetadata(identifier: string): Promise<SpotifyTracklistMetadata> {
+    const payload = this.getPayload();
 
-    if ('error' in response) {
-      return this.generateDummyTracklist();
+    const response = await fetch(this.BASE_URL + `/playlists/${identifier}`, payload);
+    let body: SpotifyTracklistMetadataResponse = await response.json();
+
+    if ('error' in body) {
+      // todo handle playlist does not exist errors
     }
 
-    return response;
+    return body as SpotifyTracklistMetadata;
   }
 
-  async getTracklistItems(identifier: string) : Promise<SpotifyTracklist> {
-    this.tokenService.refreshAsNeeded();
-    const response = await firstValueFrom(this.backend.getTracklistItems(identifier));
+  async getTracklist(identifier: string): Promise<SpotifyTracklist> {
+    const payload = this.getPayload();
 
-    if ('error' in response) {
-      return this.generateDummyTracklist();
+    const response = await fetch(this.BASE_URL + `/playlists/${identifier}/tracks`, payload);
+    let body: SpotifyTracklistResponse = await response.json();
+
+    if ('error' in body) {
+      // todo handle playlist does not exist errors
     }
 
-    return response;
+    return body as SpotifyTracklist;
+  }
+
+  async getAlbumMetadata(identifier: string): Promise<SpotifyTracklistMetadata> {
+    const payload = this.getPayload();
+
+    const response = await fetch(this.BASE_URL + `/albums/${identifier}`, payload);
+    let body: SpotifyTracklistMetadataResponse = await response.json();
+
+    if ('error' in body) {
+      // todo handle playlist does not exist errors
+    }
+
+    return body as SpotifyTracklistMetadata;
+  }
+
+  async getAlbum(identifier: string): Promise<SpotifyTracklist> {
+    const payload = this.getPayload();
+
+    const response = await fetch(this.BASE_URL + `/albums/${identifier}/tracks`, payload);
+    let body: SpotifyTracklistResponse = await response.json();
+
+    if ('error' in body) {
+      // todo handle playlist does not exist errors
+    }
+
+    return body as SpotifyTracklist;
+  }
+
+  private getPayload(): SpotifyApiRequest {
+    const { access_token } = this.storage.getItems();
+    return {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${access_token}`,
+      }
+    }
   }
 
 }

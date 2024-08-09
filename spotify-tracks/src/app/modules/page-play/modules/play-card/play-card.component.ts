@@ -1,5 +1,7 @@
-import { Component, Input, OnChanges, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnDestroy, output, SimpleChanges } from '@angular/core';
 import { SpotifyTrack } from '../../../../shared/models/spotify-api-response.model';
+import { GameService } from '../../../../shared/services/game/game.service';
+
 
 @Component({
   selector: 'app-play-card',
@@ -8,7 +10,7 @@ import { SpotifyTrack } from '../../../../shared/models/spotify-api-response.mod
   templateUrl: './play-card.component.html',
   styleUrl: './play-card.component.css'
 })
-export class PlayCardComponent implements OnChanges {
+export class PlayCardComponent implements OnChanges, OnDestroy {
   onSelectTrack = output<number>();
   onHideTrack = output<number>();
 
@@ -20,7 +22,14 @@ export class PlayCardComponent implements OnChanges {
   title!: string;
   artist!: string;
 
-  ngOnChanges(changes: SimpleChanges): void { // ?? maybe move this to a service using rxjs Subject?
+  constructor(private gameService: GameService) {
+    this.gameService.childBridge.subscribe((msg: number) => {
+      if (msg != this.cardId) {
+        this.muteAudio(); }
+    });
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
       if (this.playing) {
         this.muteAudio();
       }
@@ -32,13 +41,16 @@ export class PlayCardComponent implements OnChanges {
       this.artist = this.track.artists[0].name;
   }
 
+  ngOnDestroy(): void {
+      this.gameService.childBridge.unsubscribe();
+  }
+
   handleSelectTrack() : void {
     this.onSelectTrack.emit(this.cardId);
     this.muteAudio();
   }
 
   handlePlayAudio() : void {
-    // todo alert user of no audio
     // todo maybe change display from play to stop
     if (this.audio === null) {
       alert('no audio found');
@@ -51,6 +63,9 @@ export class PlayCardComponent implements OnChanges {
     } else {
       this.muteAudio();
     }
+
+    // notify other child component to mute
+    this.gameService.childBridge.next(this.cardId);
   }
 
   muteAudio() : void {

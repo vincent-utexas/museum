@@ -1,48 +1,52 @@
 import { Injectable } from '@angular/core';
-import { firstValueFrom } from 'rxjs';
 
-import { BackendService } from '../backend/backend.service';
 import { StorageService } from '../storage/storage.service';
-import { TokenResponse } from '../../models/access-token-response.model';
+import { TokenRequest, TokenResponse } from '../../models/access-token-response.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
-  constructor( private backend: BackendService, private storage: StorageService, ) { }
+  constructor( private storage: StorageService, ) { }
 
-  getAccessToken() : void {
-    const response = firstValueFrom(this.backend.getAccessToken());
-    response.then(
-      (body: TokenResponse) => {
-        if ('error' in body) {
-          this.storage.clear();
-        } else {
-          this.storage.setAccessToken(body.access_token, body.expires_in);
-          this.storage.setRefreshToken(body.refresh_token);
-        }
-      });
-  }
-  
-  refreshAccessToken() : void {
-    const response = firstValueFrom(this.backend.refreshAccessToken());
-    response.then(
-      (body: TokenResponse) => {
-        if ('error' in body) {
-          this.storage.clear();
-          console.error("[error] refresh token request failed.");
-        } else {
-          this.storage.setAccessToken(body.access_token, body.expires_in);
-          this.storage.setRefreshToken(body.refresh_token);
-        }
-      });
-  }
+  async getAccessToken() : Promise<void> {
+    const CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
+    const REDIRECT_URI = "http://localhost:4200/redirect";
 
-  refreshAsNeeded() : void { // todo check if refresh token is invalid
-    const expiry: number = parseInt(this.storage.getItems().expiry, 10);
-    if (Date.now() >= expiry) {
-      this.refreshAccessToken();
+    const urlParams = new URLSearchParams(window.location.search);
+    const code = urlParams.get('code') as string;
+    const codeVerifier = this.storage.consumeCodeVerifier();
+
+    const params: TokenRequest = {
+      client_id: CLIENT_ID,
+      grant_type: 'authorization_code',
+      code: code,
+      redirect_uri: REDIRECT_URI,
+      code_verifier: codeVerifier,
     }
+
+    const payload = {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: new URLSearchParams(params),
+    }
+
+    const body = await fetch('https://accounts.spotify.com/api/token', payload);
+    const response: TokenResponse = await body.json();
+
+    if ('error' in response) {
+      this.storage.clear();
+      //todo handle error redirect to home
+    } else {
+      this.storage.setAccessToken(response.access_token, response.expires_in);
+      this.storage.setRefreshToken(response.refresh_token);
+    }
+
   }
 
+  refreshAsNeeded(): void {}
+
+  private async refreshAccessToken(): Promise<void> {}
 }
