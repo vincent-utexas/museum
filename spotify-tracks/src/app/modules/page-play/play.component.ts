@@ -21,6 +21,7 @@ export class PlayComponent implements OnInit {
   tracklist!: SpotifyTrack[];
   activeTracks!: SpotifyTrack[];
   rankedTracks: SpotifyTrack[] = []; // tracks in ranked order
+  backgroundSrc: string | null = null;
 
   constructor (
     private gameService: GameService, 
@@ -54,10 +55,14 @@ export class PlayComponent implements OnInit {
     
     if (this.tracksRemaining < 2) {
       this.rankedTracks.push(this.activeTracks[idx]);
-      this.router.navigate(['/end']);
+      this.router.navigate(['/results']);
     } else {
       this.activeTracks = this.gameService.getNextTracks(this.tracklist);
     }
+  }
+
+  updateBackground(idx: number) : void {
+    this.backgroundSrc = `url(${this.activeTracks[idx].album.images[0].url})`;
   }
 
 }

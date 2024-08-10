@@ -16,6 +16,12 @@ export class GameService {
     return Math.floor(Math.random() * max);
   }
 
+  /**
+   * Convert the album or tracklist received by Spotify's API to
+   * an object containing relevant data for the game.
+   * @param spotifyTracklist 
+   * @returns `SpotifyTrack[]` with `rank` attribute
+   */
   gameifyTracks(spotifyTracklist: SpotifyTracklist) : SpotifyTrack[] {
     const gameifiedTracks: SpotifyTrack[] =
       spotifyTracklist.items.map( spotifyTrack => ({

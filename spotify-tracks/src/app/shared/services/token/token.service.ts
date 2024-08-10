@@ -10,7 +10,7 @@ import { AccessTokenRequest, RefreshTokenRequest, RequestPayload, TokenResponse 
 export class TokenService {
   constructor( private storage: StorageService, private router: Router ) { }
 
-  getAccessToken() : void {
+  async getAccessToken() : Promise<void> {
     const _CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
     const _REDIRECT_URI = "http://localhost:4200/redirect";
 
@@ -45,7 +45,7 @@ export class TokenService {
       
       const { refresh_token } = this.storage.getItems();
       if (!refresh_token) {
-        alert('no refresh token found. rerouting...');
+        alert('Looks like your session has expired. Please sign in again.');
         this.router.navigate(['/auth']);
       }
       
@@ -81,7 +81,6 @@ export class TokenService {
     const response: TokenResponse = await body.json();
 
     if ('error' in response) {
-      this.storage.clear();
       //todo handle error redirect to home
     } else {
       this.storage.setAccessToken(response.access_token, response.expires_in);

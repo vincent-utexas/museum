@@ -10,6 +10,7 @@ import { StorageService } from '../../shared/services/storage/storage.service';
   imports: [RouterOutlet],
   template: `
     <p>Redirecting...</p>
+    <p (click)="reroute()">If you have not been redirected in 5 seconds, <u>click here</u></p>
     <router-outlet />
   `,
   styles: ``
@@ -22,12 +23,17 @@ export class AuthRedirectComponent implements OnInit {
     private router: Router ) { }
 
   ngOnInit(): void {
-      this.tokenService.getAccessToken();
-      if (this.storage.getItems().access_token !== "") {
-        this.router.navigate(['/start']);
-      } else {
-        this.router.navigate(['/auth']);
-      }
+    this.tokenService.getAccessToken().then(
+      () => this.reroute()
+    );
+  }
+
+  reroute(): void {
+    if (this.storage.getItems().access_token !== null) {
+      this.router.navigate(['/start']);
+    } else {
+      this.router.navigate(['/auth']);
+    }
   }
 
 

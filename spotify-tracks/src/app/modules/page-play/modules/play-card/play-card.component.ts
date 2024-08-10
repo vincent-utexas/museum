@@ -13,6 +13,7 @@ import { GameService } from '../../../../shared/services/game/game.service';
 export class PlayCardComponent implements OnChanges, OnDestroy {
   onSelectTrack = output<number>();
   onHideTrack = output<number>();
+  onTrackHover = output<number>(); // aesthetic test
 
   @Input({ required: true }) track!: SpotifyTrack;
   @Input({ required: true }) cardId!: number;
@@ -30,19 +31,23 @@ export class PlayCardComponent implements OnChanges, OnDestroy {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if (this.playing) {
-        this.muteAudio();
-      }
-      
-      this.track = changes['track'].currentValue;
-      this.imgSrc = this.track.album.images[0].url;
-      this.audio = this.track.preview_url ? new Audio(this.track.preview_url) : null;
-      this.title = this.track.name;
-      this.artist = this.track.artists[0].name;
+    if (this.playing) {
+      this.muteAudio();
+    }
+    
+    this.track = changes['track'].currentValue;
+    this.imgSrc = this.track.album.images[0].url;
+    this.audio = this.track.preview_url ? new Audio(this.track.preview_url) : null;
+    this.title = this.track.name;
+    this.artist = this.track.artists[0].name;
+
+    if (this.title.length + this.artist.length >= 35) {
+      this.title = this.title.slice(0, 21) + '...';
+    }
   }
 
   ngOnDestroy(): void {
-      this.gameService.childBridge.unsubscribe();
+    this.gameService.childBridge.unsubscribe();
   }
 
   handleSelectTrack() : void {
@@ -80,4 +85,7 @@ export class PlayCardComponent implements OnChanges, OnDestroy {
     this.muteAudio();
   }
 
+  handleTrackHover() : void {
+    this.onTrackHover.emit(this.cardId);
+  }
 }

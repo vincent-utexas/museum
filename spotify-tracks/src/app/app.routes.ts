@@ -7,7 +7,7 @@ import { EndscreenComponent } from './modules/page-endscreen/endscreen.component
 import { UserAuthComponent } from './modules/page-user-auth/user-auth.component';
 
 export const routes: Routes = [
-    {path: '', component: AuthRedirectComponent},
+    {path: '', redirectTo: '/redirect', pathMatch: 'full'},
     {path: 'auth', component: UserAuthComponent},
     {path: 'redirect', component: AuthRedirectComponent},
     {path: 'start', component: TracklistSelectComponent},

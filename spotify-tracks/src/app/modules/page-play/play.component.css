@@ -4,6 +4,15 @@
     justify-content: center;
     gap: 0.25rem;
 
+    section {
+        z-index: -1;
+        position: absolute;
+        min-width: 100vw;
+        min-height: 100vh;
+        filter: blur(2rem) brightness(75%);
+        background-size: 100%;
+    }
+
     @media only screen and (max-width: 900px) {
         flex-direction: column;
         font-size: small;
