@@ -1,0 +1,6 @@
+@for (t of tracks; track t.id) {
+    <div>
+        <img src={{t.album.images[0].url}}>
+        <p>{{ t.name }}</p>
+    </div>
+}

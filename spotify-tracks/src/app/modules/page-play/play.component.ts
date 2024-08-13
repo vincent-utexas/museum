@@ -1,10 +1,10 @@
-import { Component, numberAttribute, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { PlayCardComponent } from './modules/play-card/play-card.component';
 import { GameService } from '../../shared/services/game/game.service';
 import { SpotifyApiService } from '../../shared/services/spotify-api/spotify-api.service';
-import { SpotifyTrack } from '../../shared/models/spotify-api-response.model';
+import { SpotifyTrack, SpotifyTracklist } from '../../shared/models/spotify-api-response.model';
 
 @Component({
   selector: 'app-play',
@@ -29,35 +29,44 @@ export class PlayComponent implements OnInit {
     private router: Router,
     private route: ActivatedRoute ) {}
   
-  async ngOnInit(): Promise<void> {
+  ngOnInit(): void {
     this.mode = this.route.snapshot.queryParamMap.get("mode") as string;
     this.identifier = this.route.snapshot.queryParamMap.get("identifier") as string;
     this.kind = this.route.snapshot.queryParamMap.get("kind") as "tracklist" | "album";
 
-    if (this.kind === "tracklist") {
-      this.tracklist = this.gameService.gameifyTracks(await this.spotifyApiService.getTracklist(this.identifier));
-    } else {
-      this.tracklist = this.gameService.gameifyTracks(await this.spotifyApiService.getAlbum(this.identifier));
+    const initState = (tempTracks: SpotifyTracklist) => {
+      this.tracklist = this.gameService.gameifyTracks(tempTracks);
+      this.tracksRemaining = this.tracklist.length;
+      this.activeTracks = this.gameService.getNextTracks(this.tracklist);
     }
 
-    this.tracksRemaining = this.tracklist.length;
-    this.activeTracks = this.gameService.getNextTracks(this.tracklist);
+    if (this.kind === "tracklist") {
+      this.spotifyApiService.getTracklist(this.identifier).then(
+        (tempTracks) => initState(tempTracks)
+      );
+    } else {
+      this.spotifyApiService.getAlbum(this.identifier).then(
+        (tempTracks) => initState(tempTracks)
+      );
+    }
   }
 
   handleSelectTrack(idx: number) {
     const other = idx === 0 ? 1 : 0;
+    const otherIdx = this.tracklist.indexOf(this.activeTracks[other]);
 
-    this.tracklist.push(this.activeTracks[idx]);
+    this.tracklist.splice(otherIdx, 1);
     this.rankedTracks.push(this.activeTracks[other]);
 
     this.activeTracks[idx].rank++;
     this.tracksRemaining = this.tracklist.length;
     
-    if (this.tracksRemaining < 2) {
-      this.rankedTracks.push(this.activeTracks[idx]);
-      this.router.navigate(['/results']);
-    } else {
+    if (this.tracksRemaining >= 2) {
       this.activeTracks = this.gameService.getNextTracks(this.tracklist);
+    } else {
+      this.rankedTracks.push(this.activeTracks[idx]);
+      this.gameService.endBridge = this.rankedTracks;
+      this.router.navigate(['/results']);
     }
   }
 

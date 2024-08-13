@@ -13,7 +13,7 @@ export class AuthenticationService {
   async login(): Promise<void> {
     const CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
     const REDIRECT_URI = "http://localhost:4200/redirect";
-    const SCOPE = "playlist-read-private playlist-read-collaborative user-library-read";
+    const SCOPE = "playlist-read-private playlist-read-collaborative user-library-read user-read-private user-read-email";
 
     const codeVerifier = this.generateRandomString(64);
     const hashed = await this.sha256(codeVerifier);

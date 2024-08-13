@@ -1,9 +1,7 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
-import { TokenResponse } from '../../models/access-token-response.model';
-import { SpotifyTracklistItemsResponse, SpotifyTracklistResponse } from '../../models/spotify-api-response.model';
 import { StorageService } from '../storage/storage.service';
 
 @Injectable({
@@ -11,44 +9,15 @@ import { StorageService } from '../storage/storage.service';
 })
 export class BackendService {
 
-  private baseUrl: string = 'http://localhost:3000';
+  private baseUrl: string = 'http://127.0.0.1:8000';
 
   constructor( private http: HttpClient, private storage: StorageService ) { }
   
-  getAccessToken(): Observable<TokenResponse> {
-    const params = new URLSearchParams(window.location.search);
-    const requestArgs = new URLSearchParams({
-      code: params.get('code') as string,
-      state: params.get('state') as string, });
-    const url = `${this.baseUrl}/api/tokens/access?${requestArgs.toString()}`;
+  getSuggestionsTEST() : Observable<any> {
+    const params = new HttpParams().set('user_id', '12345').set('ranking', JSON.stringify([1,2,3,4]));
 
-    return this.http.get(url) as Observable<TokenResponse>;
+    const url = `${this.baseUrl}/suggested`;
+    return this.http.get(url, { params }) as Observable<any>;
   }
 
-  refreshAccessToken(): Observable<TokenResponse> {
-    const { refresh_token } = this.storage.getItems();
-    const url = `${this.baseUrl}/api/tokens/refresh?${refresh_token}`;
-  
-    return this.http.get(url) as Observable<TokenResponse>;
-  }
-
-  getTracklist(identifier: string): Observable<SpotifyTracklistResponse> {
-    const { access_token } = this.storage.getItems()
-    const requestArgs = new URLSearchParams({
-      token: access_token,
-      identifier: identifier, });
-    const url = `${this.baseUrl}/api/fetch/tracklist?${requestArgs.toString()}`;
-
-    return this.http.get(url) as Observable<SpotifyTracklistResponse>;
-  }
-
-  getTracklistItems(identifier: string): Observable<SpotifyTracklistItemsResponse> {
-    const { access_token } = this.storage.getItems();
-    const requestArgs = new URLSearchParams({
-      token: access_token,
-      identifier: identifier, });
-    const url = `${this.baseUrl}/api/fetch/tracklist_items?${requestArgs.toString()}`;
-    
-    return this.http.get(url) as Observable<SpotifyTracklistItemsResponse>;
-  }
 }

@@ -9,6 +9,7 @@ import { Subject } from 'rxjs';
 })
 export class GameService {
   childBridge: Subject<number> = new Subject<number>(); // let play card components communicate
+  endBridge: SpotifyTrack[] = [];
 
   constructor( private storage: StorageService ) { }
 
@@ -44,9 +45,6 @@ export class GameService {
 
     let track1: SpotifyTrack = tracklist[idx1];
     let track2: SpotifyTrack = tracklist[idx2];
-
-    tracklist.splice(idx1, 1);
-    tracklist.splice(idx2 - 1, 1);
 
     return [track1, track2];
   }

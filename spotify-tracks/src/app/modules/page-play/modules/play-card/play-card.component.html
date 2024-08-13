@@ -1,6 +1,6 @@
 <p>{{ title }} | {{ artist }}</p>
 <img (click)="handleSelectTrack()" (mouseenter)="handleTrackHover()" [src]="imgSrc" alt="album cover">
 <div>
-    <button (click)="handlePlayAudio()">(play)</button>
+    <button (click)="handlePlayAudio()">({{!playing ? 'play' : 'stop'}})</button>
     <button (click)="handleHideTrack()">(hide this track)</button>
 </div>

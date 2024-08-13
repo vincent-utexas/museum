@@ -23,6 +23,7 @@ export interface SpotifyTrack {
     artists: SimplifiedArtistObject[],
     album: AlbumObject,
     rank: number,
+    id: string,
 }
 
 export interface SpotifyApiRequest {

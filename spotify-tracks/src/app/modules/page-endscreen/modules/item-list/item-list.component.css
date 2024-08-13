@@ -1,0 +1,22 @@
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 1rem;
+    max-height: 70vh;
+    overflow-y: scroll;
+
+    img {
+        width: 45px;
+        height: 45px;
+    }
+
+    p {
+        margin-left: 1rem;
+    }
+
+    div {
+        max-height: 45px;
+        display: inherit;
+    }
+}
