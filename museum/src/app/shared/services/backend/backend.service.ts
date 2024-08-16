@@ -12,7 +12,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class BackendService implements OnDestroy {
 
-  private BASE_URL: string = process.env['API_URL'] || environment.apiUrl;
+  private BASE_URL: string = environment.apiUrl;
   private destroy$ = new Subject<void>();
 
   constructor( private http: HttpClient, private dataService: DataService ) { }

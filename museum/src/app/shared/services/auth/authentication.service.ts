@@ -8,8 +8,8 @@ import { environment } from '../../../../environments/environment';
   providedIn: 'root'
 })
 export class AuthenticationService {
-  private CLIENT_ID = process.env['CLIENT_ID'] || environment.CLIENT_ID;
-  private REDIRECT_URI = process.env['REDIRECT_URI'] || environment.REDIRECT_URI;
+  private CLIENT_ID = environment.CLIENT_ID;
+  private REDIRECT_URI = environment.REDIRECT_URI;
 
   constructor( private dataService: DataService ) { }
 
