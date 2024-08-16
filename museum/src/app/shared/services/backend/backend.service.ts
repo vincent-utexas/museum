@@ -5,13 +5,14 @@ import { Subject, Observable, take } from 'rxjs';
 import { DataService } from '../data/data.service';
 import { SpotifyTrack } from '../../models/spotify-api-response.model';
 import { RecommendedTracksResponse } from '../../models/backend-response.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendService implements OnDestroy {
 
-  private BASE_URL: string = 'http://127.0.0.1:8000';
+  private BASE_URL: string = process.env['API_URL'] || environment.apiUrl;
   private destroy$ = new Subject<void>();
 
   constructor( private http: HttpClient, private dataService: DataService ) { }
