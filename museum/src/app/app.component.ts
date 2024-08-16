@@ -11,6 +11,6 @@ import { UserAuthComponent } from './modules/page-user-auth/user-auth.component'
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'spotify-tracks';
+  title = 'museum';
 
 }
