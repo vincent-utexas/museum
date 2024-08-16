@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 
 import { DataService } from '../data/data.service';
 import { AuthRequest } from '../../models/login-response.model';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
+  private CLIENT_ID = environment.CLIENT_ID;
+  private REDIRECT_URI = environment.REDIRECT_URI;
 
   constructor( private dataService: DataService ) { }
 
   async login(): Promise<void> {
-    const CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
-    const REDIRECT_URI = "http://localhost:4200/redirect";
     const SCOPE = "playlist-read-private playlist-read-collaborative user-library-read user-read-private user-read-email";
 
     const codeVerifier = this.generateRandomString(64);
@@ -22,11 +23,11 @@ export class AuthenticationService {
 
     const params: AuthRequest = {
       response_type: 'code',
-      client_id: CLIENT_ID,
+      client_id: this.CLIENT_ID,
       scope: SCOPE,
       code_challenge_method: 'S256',
       code_challenge: codeChallenge,
-      redirect_uri: REDIRECT_URI,
+      redirect_uri: this.REDIRECT_URI,
     }
 
     const authUrl = new URL("https://accounts.spotify.com/authorize");
