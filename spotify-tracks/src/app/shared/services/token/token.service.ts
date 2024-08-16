@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { environment } from '../../../../environments/environment';
 import { DataService } from '../data/data.service';
 import { AccessTokenRequest, RefreshTokenRequest, RequestPayload, TokenResponse } from '../../models/access-token-response.model';
 
@@ -8,21 +9,21 @@ import { AccessTokenRequest, RefreshTokenRequest, RequestPayload, TokenResponse 
   providedIn: 'root'
 })
 export class TokenService {
+  private CLIENT_ID = environment.CLIENT_ID;
+  private REDIRECT_URI = environment.REDIRECT_URI;
+
   constructor( private dataService: DataService, private router: Router ) { }
 
   async getAccessToken() : Promise<string> {
-    const _CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
-    const _REDIRECT_URI = "http://localhost:4200/redirect";
-
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code') as string;
     const codeVerifier = this.dataService.consumeCodeVerifier();
 
     const params: AccessTokenRequest = {
-      client_id: _CLIENT_ID,
+      client_id: this.CLIENT_ID,
       grant_type: 'authorization_code',
       code: code,
-      redirect_uri: _REDIRECT_URI,
+      redirect_uri: this.REDIRECT_URI,
       code_verifier: codeVerifier,
     }
 
@@ -54,13 +55,12 @@ export class TokenService {
   }
 
   private refreshAccessToken(): void {
-    const _CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
     const { refresh_token } = this.dataService.getItems();
 
     const params: RefreshTokenRequest = {
       grant_type: 'refresh_token',
       refresh_token: refresh_token,
-      client_id: _CLIENT_ID,
+      client_id: this.CLIENT_ID,
     }
 
     const payload: RequestPayload = {
@@ -86,6 +86,6 @@ export class TokenService {
       this.dataService.setAccessToken(response.access_token, response.expires_in);
       this.dataService.setRefreshToken(response.refresh_token);
     }
-
   }
+  
 }
