@@ -142,3 +142,12 @@ export interface SpotifyUser {
     uri: string,
     display_name: string | null,
 }
+
+export interface RecommendationSeedObject {
+    alterFilteringSize: number,
+    afterRelinkingSize: number,
+    href: string,
+    id: string,
+    initialPoolSize: number,
+    type: "artist" | "track" | "genre"
+}

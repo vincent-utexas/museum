@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { PlayCardComponent } from './modules/play-card/play-card.component';
 import { GameService } from '../../shared/services/game/game.service';
+import { DataService } from '../../shared/services/data/data.service';
 import { SpotifyApiService } from '../../shared/services/spotify-api/spotify-api.service';
 import { SpotifyTrack, SpotifyTracklist } from '../../shared/models/spotify-api-response.model';
 
@@ -25,6 +26,7 @@ export class PlayComponent implements OnInit {
 
   constructor (
     private gameService: GameService, 
+    private dataService: DataService,
     private spotifyApiService: SpotifyApiService,
     private router: Router,
     private route: ActivatedRoute ) {}
@@ -38,6 +40,7 @@ export class PlayComponent implements OnInit {
       this.tracklist = this.gameService.gameifyTracks(tempTracks);
       this.tracksRemaining = this.tracklist.length;
       this.activeTracks = this.gameService.getNextTracks(this.tracklist);
+      this.dataService.cardParentBridge.next(this.activeTracks);
     }
 
     if (this.kind === "tracklist") {
@@ -63,15 +66,16 @@ export class PlayComponent implements OnInit {
     
     if (this.tracksRemaining >= 2) {
       this.activeTracks = this.gameService.getNextTracks(this.tracklist);
+      this.dataService.cardParentBridge.next(this.activeTracks);
     } else {
       this.rankedTracks.push(this.activeTracks[idx]);
-      this.gameService.endBridge = this.rankedTracks;
+      this.dataService.setRankedTracks(this.rankedTracks);
       this.router.navigate(['/results']);
     }
   }
 
   updateBackground(idx: number) : void {
-    this.backgroundSrc = `url(${this.activeTracks[idx].album.images[0].url})`;
+    this.backgroundSrc = `url(${this.activeTracks[idx].image_url})`;
   }
 
 }

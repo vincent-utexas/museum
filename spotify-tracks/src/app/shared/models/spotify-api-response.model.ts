@@ -1,4 +1,4 @@
-import { ImageObject, PlaylistTrackObject, TrackObject, SpotifyUser, SimplifiedTrackObject, SimplifiedArtistObject, AlbumObject } from "./spotify-api-utils.model";
+import { ImageObject, PlaylistTrackObject, TrackObject, SpotifyUser, SimplifiedTrackObject, SimplifiedArtistObject, AlbumObject, RecommendationSeedObject } from "./spotify-api-utils.model";
 
 // Full versions are received by the backend and converted to truncated versions
 // in spotify-api.service.ts
@@ -14,16 +14,30 @@ export interface SpotifyTracklistMetadata {
 }
 
 export interface SpotifyTracklist {
-    items: PlaylistTrackObject[], //| SimplifiedTrackObject[],
+    items: PlaylistTrackObject[] // s| SimplifiedTrackObject[],
 }
 
-export interface SpotifyTrack {
-    name: string,
-    preview_url: string | null,
-    artists: SimplifiedArtistObject[],
-    album: AlbumObject,
-    rank: number,
+export interface SpotifyTrackLike {
     id: string,
+    image_url: string,
+    name: string,
+    spotify_url: string 
+}
+
+export interface SpotifyRecommendations {
+    seeds: RecommendationSeedObject[],
+    tracks: TrackObject[]
+}
+
+export interface SpotifyTrack extends SpotifyTrackLike {
+    preview_url: string | null,
+    artist_name: string,
+    artist_id: string, // artists: SimplifiedArtistObject[],
+    album_name: string, 
+    album_id: string,
+    album_popularity: number, // album: AlbumObject
+    rank: number,
+    href: string,
 }
 
 export interface SpotifyApiRequest {

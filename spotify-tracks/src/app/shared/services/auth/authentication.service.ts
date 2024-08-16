@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 
+import { DataService } from '../data/data.service';
 import { AuthRequest } from '../../models/login-response.model';
-import { StorageService } from '../storage/storage.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthenticationService {
 
-  constructor( private storage: StorageService ) { }
+  constructor( private dataService: DataService ) { }
 
   async login(): Promise<void> {
     const CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
@@ -18,7 +18,7 @@ export class AuthenticationService {
     const codeVerifier = this.generateRandomString(64);
     const hashed = await this.sha256(codeVerifier);
     const codeChallenge = this.base64encode(hashed);
-    this.storage.setCodeVerifer(codeVerifier);
+    this.dataService.setCodeVerifer(codeVerifier);
 
     const params: AuthRequest = {
       response_type: 'code',

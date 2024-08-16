@@ -13,5 +13,5 @@ export const routes: Routes = [
     {path: 'start', component: TracklistSelectComponent},
     {path: 'play', component: PlayComponent},
     {path: 'results', component: EndscreenComponent},
-    // {path: '**', component: NotFoundComponent, title: '404 page'},
+    {path: '**', component: NotFoundComponent},
 ];

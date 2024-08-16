@@ -2,4 +2,31 @@
     display: flex;
     justify-content: center;
     gap: 3rem;
+
+    .svg_container {
+        margin-top: 1rem;
+    }
+
+    .svg_container > p {
+        display: inline;
+        margin-left: 1rem;
+    }
+
+    .svg_container:hover {
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    section {
+        width: 40%;
+    }
+
+    @media only screen and (max-width: 600px) {
+        flex-direction: column;
+
+        section {
+            width: 100%;
+        }
+    }
+
 }

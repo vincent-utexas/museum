@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { StorageService } from '../storage/storage.service';
+import { DataService } from '../data/data.service';
 import { AccessTokenRequest, RefreshTokenRequest, RequestPayload, TokenResponse } from '../../models/access-token-response.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TokenService {
-  constructor( private storage: StorageService, private router: Router ) { }
+  constructor( private dataService: DataService, private router: Router ) { }
 
-  async getAccessToken() : Promise<void> {
+  async getAccessToken() : Promise<string> {
     const _CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
     const _REDIRECT_URI = "http://localhost:4200/redirect";
 
     const urlParams = new URLSearchParams(window.location.search);
     const code = urlParams.get('code') as string;
-    const codeVerifier = this.storage.consumeCodeVerifier();
+    const codeVerifier = this.dataService.consumeCodeVerifier();
 
     const params: AccessTokenRequest = {
       client_id: _CLIENT_ID,
@@ -34,16 +34,16 @@ export class TokenService {
       body: new URLSearchParams(params),
     }
 
-    this.makeTokenRequest(payload);
-
+    await this.makeTokenRequest(payload);
+    return this.dataService.getItems().access_token;
   }
 
   refreshAsNeeded(): void {
     //todo handle refresh token expiry, reroute to auth page
-    const { expiry } = this.storage.getItems();
+    const { expiry } = this.dataService.getItems();
     if (Date.now() >= expiry) {
       
-      const { refresh_token } = this.storage.getItems();
+      const { refresh_token } = this.dataService.getItems();
       if (!refresh_token) {
         alert('Looks like your session has expired. Please sign in again.');
         this.router.navigate(['/auth']);
@@ -55,7 +55,7 @@ export class TokenService {
 
   private refreshAccessToken(): void {
     const _CLIENT_ID = "9fefcc5e5f3c49559723a850ee6db721";
-    const { refresh_token } = this.storage.getItems();
+    const { refresh_token } = this.dataService.getItems();
 
     const params: RefreshTokenRequest = {
       grant_type: 'refresh_token',
@@ -81,11 +81,11 @@ export class TokenService {
     const response: TokenResponse = await body.json();
 
     if ('error' in response) {
-      //todo handle error redirect to home
+      // todo reroute to error
     } else {
-      this.storage.setAccessToken(response.access_token, response.expires_in);
-      this.storage.setRefreshToken(response.refresh_token);
-    }  
-  
+      this.dataService.setAccessToken(response.access_token, response.expires_in);
+      this.dataService.setRefreshToken(response.refresh_token);
+    }
+
   }
 }

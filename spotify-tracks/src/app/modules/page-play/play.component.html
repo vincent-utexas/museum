@@ -1,4 +1,4 @@
-<app-play-card [track]="activeTracks[0]" [cardId]="0" (onSelectTrack)="handleSelectTrack($event)" (onTrackHover)="updateBackground($event)"/>
+<app-play-card [cardId]="0" (onSelectTrack)="handleSelectTrack($event)" (onTrackHover)="updateBackground($event)"/>
 <div>&mdash; {{tracksRemaining}} &mdash;</div>
-<app-play-card [track]="activeTracks[1]" [cardId]="1" (onSelectTrack)="handleSelectTrack($event)" (onTrackHover)="updateBackground($event)"/>
+<app-play-card [cardId]="1" (onSelectTrack)="handleSelectTrack($event)" (onTrackHover)="updateBackground($event)"/>
 <section [style.background-image]="backgroundSrc"></section>

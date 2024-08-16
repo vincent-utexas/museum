@@ -1,6 +1,8 @@
-import { Component, Input, OnChanges, OnDestroy, output, SimpleChanges } from '@angular/core';
+import { Component, Input, OnDestroy, output, SimpleChanges } from '@angular/core';
+import { takeUntil, Subject } from 'rxjs';
+
 import { SpotifyTrack } from '../../../../shared/models/spotify-api-response.model';
-import { GameService } from '../../../../shared/services/game/game.service';
+import { DataService } from '../../../../shared/services/data/data.service';
 
 
 @Component({
@@ -10,12 +12,12 @@ import { GameService } from '../../../../shared/services/game/game.service';
   templateUrl: './play-card.component.html',
   styleUrl: './play-card.component.css'
 })
-export class PlayCardComponent implements OnChanges, OnDestroy {
+export class PlayCardComponent implements OnDestroy {
   onSelectTrack = output<number>();
   onHideTrack = output<number>();
   onTrackHover = output<number>(); // aesthetic test
+  destroy$ = new Subject<void>();
 
-  @Input({ required: true }) track!: SpotifyTrack;
   @Input({ required: true }) cardId!: number;
   imgSrc!: string;
   audio!: HTMLAudioElement | null;
@@ -23,23 +25,32 @@ export class PlayCardComponent implements OnChanges, OnDestroy {
   title!: string;
   artist!: string;
 
-  constructor(private gameService: GameService) {
-    this.gameService.childBridge.subscribe((msg: number) => {
-      if (msg != this.cardId) {
-        this.muteAudio(); }
-    });
+  constructor(private dataService: DataService) {
+    this.dataService.cardComponentBridge
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(
+      (id: number) => {
+        if (id != this.cardId) {
+          this.muteAudio(); }
+      }
+    );
+
+    this.dataService.cardParentBridge
+    .pipe(takeUntil(this.destroy$))
+    .subscribe(
+      (nextTrack: SpotifyTrack[]) => this.onChange(nextTrack[this.cardId])
+    );
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
+  onChange(track: SpotifyTrack): void {
     if (this.playing) {
       this.muteAudio();
     }
     
-    this.track = changes['track'].currentValue;
-    this.imgSrc = this.track.album.images[0].url;
-    this.audio = this.track.preview_url ? new Audio(this.track.preview_url) : null;
-    this.title = this.track.name;
-    this.artist = this.track.artists[0].name;
+    this.imgSrc = track.image_url;
+    this.audio = track.preview_url ? new Audio(track.preview_url) : null;
+    this.title = track.name;
+    this.artist = track.artist_name;
 
     if (this.title.length + this.artist.length >= 35) {
       this.title = this.title.slice(0, 21) + '...';
@@ -47,7 +58,8 @@ export class PlayCardComponent implements OnChanges, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gameService.childBridge.unsubscribe();
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 
   handleSelectTrack() : void {
@@ -70,7 +82,7 @@ export class PlayCardComponent implements OnChanges, OnDestroy {
     }
 
     // notify other child component to mute
-    this.gameService.childBridge.next(this.cardId);
+    this.dataService.cardComponentBridge.next(this.cardId);
   }
 
   muteAudio() : void {

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { StorageService } from '../storage/storage.service';
-import { SpotifyApiRequest, SpotifyTracklist, SpotifyTracklistResponse, SpotifyTracklistMetadata, SpotifyTracklistMetadataResponse } from '../../models/spotify-api-response.model';
+import { DataService } from '../data/data.service';
+import { SpotifyApiRequest, SpotifyTracklist, SpotifyTracklistResponse, SpotifyTracklistMetadata, SpotifyTracklistMetadataResponse, SpotifyRecommendations } from '../../models/spotify-api-response.model';
 import { TokenService } from '../token/token.service';
 
 @Injectable({
@@ -10,7 +10,7 @@ import { TokenService } from '../token/token.service';
 export class SpotifyApiService {
   BASE_URL = "https://api.spotify.com/v1";
 
-  constructor( private storage: StorageService, private tokenService: TokenService ) { }
+  constructor( private dataService: DataService, private tokenService: TokenService ) { }
 
   generateDummyTracklist(): SpotifyTracklistMetadata {
     return {
@@ -77,8 +77,35 @@ export class SpotifyApiService {
     return body as SpotifyTracklist;
   }
 
+  async getUserId() : Promise<string> {
+    const payload = this.getPayload();
+    this.tokenService.refreshAsNeeded();
+
+    const response = await fetch(this.BASE_URL + `/me`, payload);
+    let body = await response.json();
+
+    if ('error' in body) {
+      // todo handle unknown error, reroute to error page
+    }
+
+    this.dataService.setUserId(body.id);
+    return body.id;
+  }
+
+  async getRecommendations(seedArtists: string[], seedTracks: string[]): Promise<SpotifyRecommendations> {
+    const payload = this.getPayload();
+    this.tokenService.refreshAsNeeded();
+    const artistQuery = seedArtists.join(",");
+    const tracksQuery = seedTracks.join(",");
+    
+    const response = await fetch(this.BASE_URL + `/recommendations?seed_artists=${artistQuery}&seed_tracks=${tracksQuery}`, payload);
+    const body: SpotifyRecommendations = await response.json();
+
+    return body as SpotifyRecommendations;
+  }
+
   private getPayload(): SpotifyApiRequest {
-    const { access_token } = this.storage.getItems();
+    const { access_token } = this.dataService.getItems();
     return {
       method: 'GET',
       headers: {
