@@ -38,7 +38,7 @@ export class PlayComponent implements OnInit {
 
     const initState = (tempTracks: SpotifyTracklist) => {
       this.tracklist = this.gameService.gameifyTracks(tempTracks);
-      this.tracksRemaining = this.tracklist.length;
+      this.tracksRemaining = this.tracklist.length - 1;
       this.activeTracks = this.gameService.getNextTracks(this.tracklist);
       this.dataService.cardParentBridge.next(this.activeTracks);
     }
@@ -62,9 +62,9 @@ export class PlayComponent implements OnInit {
     this.rankedTracks.push(this.activeTracks[other]);
 
     this.activeTracks[idx].rank++;
-    this.tracksRemaining = this.tracklist.length;
+    this.tracksRemaining = this.tracklist.length - 1;
     
-    if (this.tracksRemaining >= 2) {
+    if (this.tracksRemaining >= 1) {
       this.activeTracks = this.gameService.getNextTracks(this.tracklist);
       this.dataService.cardParentBridge.next(this.activeTracks);
     } else {
