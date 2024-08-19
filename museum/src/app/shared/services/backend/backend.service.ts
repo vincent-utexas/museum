@@ -12,7 +12,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class BackendService implements OnDestroy {
 
-  private BASE_URL: string = environment.apiUrl;
+  private BASE_URL: string = environment.API_URL;
   private destroy$ = new Subject<void>();
 
   constructor( private http: HttpClient, private dataService: DataService ) { }
@@ -81,7 +81,7 @@ export class BackendService implements OnDestroy {
   }
 
   private createRankingBatch(userId: string, tracks: SpotifyTrack[]) : void {
-    const url = `${this.BASE_URL}/ranking/batch/${userId}`;
+    const url = `${this.BASE_URL}/rankings/batch/${userId}`;
     let items = [];
     for (let i = 0; i < tracks.length; i++) {
       items.push({
